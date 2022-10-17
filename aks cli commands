@@ -1,0 +1,17 @@
+> az login
+
+#Move the generated Kubeconfig file to ~/.kube/config
+mv kubeconfig ~/.kube/config
+
+> kubectl get nodes         -check nodes running
+
+
+> kubectl get deployments
+
+> kubectl create -f https://raw.githubusercontent.com/kubernetes/website/master/content/en/examples/controllers/nginx-deployment.yaml
+
+>kubectl get deployments
+
+>kubectl get pods
+
+>> terraform destroy --auto-approve             #auto_destroy_resourse

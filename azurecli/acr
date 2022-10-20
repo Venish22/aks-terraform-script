@@ -1,0 +1,11 @@
+#Make sure you are login to Azure portal first.
+
+az login
+
+#Execute below command to create a resource group in Azure portal.
+
+az group create --name myResourceGroup --location southcentralus
+
+#Run the below command to create your own private container registry using Azure Container Registry (ACR).
+
+az acr create --resource-group myResourceGroup --name myacrrepo31 --sku Standard --location southcentralus

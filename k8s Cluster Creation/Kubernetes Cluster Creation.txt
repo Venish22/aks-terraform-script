@@ -1,0 +1,105 @@
+# 4 Ubuntu servers (Linux version)
+
+echo # Update the server
+----- Ensure the 3 servers are upto date 
+sudo apt-get update -y
+sudo apt-get upgrade -y
+
+---------- CRI Start Installation
+
+echo # install CRI - (Containerd, CRIO, Docker)
+---- Install Container runtime interface (Containerd)
+sudo apt-get install containerd -y
+
+echo # configure containerd and start the service
+echo # create the folder
+---- Start Containerd
+
+sudo mkdir -p /etc/containerd
+sudo su -
+containerd config default /etc/containerd/config.toml
+exit
+
+--------------- CRI Complete Installation
+
+--------------- Kubernetes Start Installation
+
+--- get the key
+echo # add gpg key
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+
+--- add a repository
+echo # add kuberentes repository
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+
+--- install k8s components
+echo # install kuberentes components
+sudo apt-get install kubeadm kubectl kubelet -y
+
+--- add the bridge network /ip tables configuration
+echo # update sysctl.conf node iptables to see bridge network traffic
+sudo vi /etc/sysctl.conf
+----# add the following "net.bridge.bridge-nf-call-iptables = 1"
+
+sudo -s
+sudo echo '1' > /proc/sys/net/ipv4/ip_forward
+exit
+
+echo # reload the system configuration with the command
+sudo sysctl --system
+
+echo # load overlay and netfilter modules
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+echo # add other hosts
+sudo vi /etc/hosts
+-------- # add the following
+10.0.0.8 ubuntu-server1
+10.0.0.9 ubuntu-server2
+10.0.0.10 ubuntu-server3
+10.0.0.11 ubuntu-server4
+
+sudo vi /etc/fstab
+-------- # comment "/swap.img"
+
+echo # disable swap
+sudo swapoff -a
+
+echo # pull the necessary containers for kubeadm
+sudo kubeadm config images pull
+
+---------- Kind of complete Kubernetes installation
+
+---------- Install Master components - Only in Master node
+echo # ------- Run only in Master node, install master components ------------ #
+sudo kubeadm init
+
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+---- CNI - Container Network Interface - Calico, Flannel, Weave
+echo # download calico
+curl https://docs.projectcalico.org/manifests/calico.yaml > calico.yaml
+kubectl apply -f ./calico.yaml
+
+echo # copy kubeconfig to other servers
+scp -r $HOME/.kube dhivakar@20.121.203.38:/home/dhivakar
+scp -r $HOME/.kube dhivakar@20.231.211.54:/home/dhivakar
+scp -r $HOME/.kube dhivakar@20.231.100.5:/home/dhivakar
+
+exit
+echo # ------- Run only in Master node, install master components complete ------------ #
+
+echo # ------- run in worker nodes only ---------- #
+
+sudo -i
+
+kubeadm join 10.0.0.8:6443 --token u4bcm6.ilzpzjc3zjdn3t1f \
+        --discovery-token-ca-cert-hash sha256:d38febabb5367b34c73bffc0c66045b8440ce1130b6dda00e2b2c8717aed9dff
+exit
+
+exit
+
+echo # ------ run in worker nodes only completed ---------- #

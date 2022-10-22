@@ -1,0 +1,8 @@
+#Pre-requistes:
+#Install Azure CLI
+#Make sure Terraform is setup on your local machine
+#Azure subscription 
+#Authenticate Terraform with Azure using Azure CLI.
+
+#login to azure
+   az login

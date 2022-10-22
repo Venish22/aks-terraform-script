@@ -1,0 +1,21 @@
+Networking basic
+
+1)Public IP Address
+2)Private IP Address
+
+Public IP Address  
+ - Beside the private IP address
+
+Private IP Address
+
+10.0.0.0-10.255.255.255
+172.0.0.0-172.255.255.255
+192.0.0.0-192.255.255.255
+
+Azure reservers 5 IP address within each subnet
+
+x.x.x.0: Network Address
+x.x.x.1: Reserved by Azure for the Default Gateway
+x.x.x.2, x.x.x.3: Reserved by Azure to map the Azure DNS IPs to the VNet space
+x.x.x.255: Broadcast address 
+

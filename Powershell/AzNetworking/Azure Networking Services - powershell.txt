@@ -1,0 +1,31 @@
+Azure Networking Services
+
+Connectivity services: Connect Azure and on-premies using any or a combination of these networking services in Azure
+
+	-Virtual Network (VNet)
+	-Peering service
+	-Azure Bastion
+	-ExpressRoute
+	-VPN Gateway
+	-Virtual WAN
+	-Virtual Network NAT Gateway
+	-Azure DNS
+
+•Application protection services: Protect your applications using any or a combination of these networking services in Azure
+	-Load Balancer
+	-Private Link,  
+	-DDoS protection
+	-Azure Firewall
+	-Network Security Groups
+	-Web Application Firewall
+	-Virtual Network Service Endpoints.
+
+•Application delivery services: Deliver applications in the Azure network using any or a combination of these networking services in Azure
+	-Content Delivery Network (CDN), 
+	-Azure Front Door Service
+	-Traffic Manager
+	-Application Gateway
+
+•Network monitoring: Monitor your network resources using any or a combination of these networking services in Azure -
+	-Network Watcher
+	-Azure Monitor

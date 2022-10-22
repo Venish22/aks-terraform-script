@@ -1,0 +1,48 @@
+Azure Storage Services
+
+Types of Data:
+
+1)Structured data
+2)Semi Structured Data or NoSQL
+3)Unstrutured Data
+
+Structured Data
+  Table
+  Database
+  SQL
+  Schema
+  RDMS - tables are connected
+
+Semistructured DAtabase or NoSql
+  expand the column 
+  expand the row
+
+Storage Services
+
+------Infrastruture as Service - Block Storage, File storage
+
+Block storage 
+	- Aure Disk - disk attached to system
+
+File storage  - remote share mapped locally
+	- Azure Files - shared files which is in remote server - SMB protocal 445
+	-NAS device - network attached - appliciance
+	- default 5TB and finite space limited of 64TB
+
+Platform as Service - Object Storage, Message Storage, NoSql
+
+Object Storage [Binary large object]
+	- Blob Storage - to store the binary files; it larger storage service
+
+Message Storage -(Storage Queues) 	
+	- sharing data as a  junks to machine as message
+
+NoSql 
+	- Table storage - stores semi structure data into Table Storage
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+

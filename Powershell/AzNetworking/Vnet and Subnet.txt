@@ -1,0 +1,108 @@
+Virtual Network 
+
+Vnet acts as a container for network
+
+Vnet holds the subnet
+
+Subnet hold the Virtual Machine
+
+-----------------------------------------------------------------------------
+
+Create using portal
+
+create the virtual network under the resource group
+
+create the subnet
+
+review and create
+
+create a new VM
+
+networking select the VNet and the subnet
+
+review and create the virtual machine 
+
+and the virtual machine gets created in the vnet under the subnet
+
+------------------------------------------------
+Using Powershell
+
+
+--------------Resource Group
+
+$rg = @{
+    Name = 'CreateVNetQS-rg'
+    Location = 'EastUS'
+}
+New-AzResourceGroup @rg
+
+---------------Create the virtual network
+
+$vnet = @{
+    Name = 'myVNet'
+    ResourceGroupName = 'CreateVNetQS-rg'
+    Location = 'EastUS'
+    AddressPrefix = '10.0.0.0/16'    
+}
+$virtualNetwork = New-AzVirtualNetwork @vnet
+
+-----------------Add subnet
+
+$subnet = @{
+    Name = 'default'
+    VirtualNetwork = $virtualNetwork
+    AddressPrefix = '10.0.0.0/24'
+}
+$subnetConfig = Add-AzVirtualNetworkSubnetConfig @subnet
+
+------------------Associate the subnet to the virtual network
+
+$virtualNetwork | Set-AzVirtualNetwork
+
+------------------create the vm1
+
+$vm1 = @{
+    ResourceGroupName = 'CreateVNetQS-rg'
+    Location = 'EastUS'
+    Name = 'myVM1'
+    VirtualNetworkName = 'myVNet'
+    SubnetName = 'default'
+}
+New-AzVM @vm1 -AsJob
+
+--------------------create the vm2
+
+$vm2 = @{
+    ResourceGroupName = 'CreateVNetQS-rg'
+    Location = 'EastUS'
+    Name = 'myVM2'
+    VirtualNetworkName = 'myVNet'
+    SubnetName = 'default'
+}
+New-AzVM @vm2
+
+---------------------connect the virtual network from the internet
+
+$ip = @{
+    Name = 'myVM1'
+    ResourceGroupName = 'CreateVNetQS-rg'
+}
+Get-AzPublicIpAddress @ip | select IpAddress
+
+------------------------copy the ip address from the last step
+
+mstsc /v:<publicIpAddress>
+
+------------------------Communicate between VMs -ping VM2
+
+>C:\Users\myVM1> ping myVM2
+
+-----------------------To allow myVM2 to ping myVM1 in a later step, enter this command:
+
+New-NetFirewallRule –DisplayName "Allow ICMPv4-In" –Protocol ICMPv4
+
+------------------------Clean up resources
+
+Remove-AzResourceGroup -Name 'CreateVNetQS-rg' -Force
+
+------------------------------------------------------------------------------------------------------------

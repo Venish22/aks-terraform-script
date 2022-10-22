@@ -1,0 +1,27 @@
+Vnet Peering 
+
+route traffic between them privately and virtual machine in the peered VNet can communicate with each other if they are in the same network.
+
+VNet Peering Types
+
+1) Regional VNet Peering: - Connecting VNets within the the same region
+2) Global VNet Peeering: - Connecting VNets across azure region
+ 
+
+Azure Bastion
+
+Created the Virtual Network
+
+multiple subnet under vritual Network
+
+instead of enabling IP address using Azure Bastion
+
+>>>>we should not enable the RDP to the internet so we are using Bastion which we will communicate through (443 port)SSL  
+
+
+ExpressRoute
+
+connecting to the azure cloud, microsoft apps using the optical cable
+
+one time configuration from on-permis to cloud
+--------------------------------------------------------------------------------

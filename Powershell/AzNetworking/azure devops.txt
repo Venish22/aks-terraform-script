@@ -1,0 +1,18 @@
+Agile Method
+
+Epic
+ |
+ |______feature - (child)
+           |
+	     |_______User task
+
+-------------------------------------------------------
+
+
+$(system.defaultworkingdirectory)
+-- the local path on the agent where your source code copied
+
+contents: **/*.jar
+
+$(build.artifactstagingdirectory)
+-- The local path on the agent where any artifacts are copied 

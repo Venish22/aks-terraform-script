@@ -1,0 +1,103 @@
+Creating a  storage service
+
+Basic 
+  	subscription
+  		|__ Resource Group
+
+	Instance Detail
+		Storage account name
+		region
+		Performance 
+			Standard
+			Premium
+		Redundacy
+
+Advanced
+	Security
+	Data Lake Storage Gen2
+	Blob storage
+ 		Access tier 
+			Hot- frequently
+			cool - Infreqent accessed data
+	Azue files
+   		enabled - 64Tb
+
+Networking
+	Network connectivity
+  		Network access
+	Networking routing
+		Routing reference 
+			Microsoft network routing
+			Internet routing
+
+Data production
+      enable soft delete for blobs
+	enable soft delete for containers
+	enable soft delete for file shares
+
+Encryption 
+	Encryption type
+		Microsoft managed Keys
+		Customber-managed keys
+	enable support for customber managed keys
+		Blobs and files only
+		All service type (blobs, files, tables, and queues)
+	enable infrastructure encryption
+            
+map it using the powershell script from the connect option network location
+
+Container ---> name
+		   public access  
+
+
+SAS token 
+
+private --> generate SAS 
+		Sigining key
+		permission
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+connect to azure account
+
+		Connect-AzAccount
+
+new resource group
+
+ 		$resourceGroup = "<resource-group>"
+		$location = "<location>"
+		New-AzResourceGroup -Name $resourceGroup -Location $location
+
+get location
+ 
+		Get-AzLocation | select Location
+
+
+		New-AzStorageAccount -ResourceGroupName $resourceGroup `
+  		-Name <account-name> `
+  		-Location $location `
+  		-SkuName Standard_RAGRS `
+  		-Kind StorageV2
+
+To create an account with Azure DNS zone endpoints (preview), follow these steps:
+
+
+Install-Module PowerShellGet –Repository PSGallery –Force
+		Close and reopen the PowerShell console.
+
+$rgName = "<resource-group>"
+$accountName = "<storage-account>"
+
+$account = New-AzStorageAccount -ResourceGroupName $rgName `
+          -Name $accountName `
+          -SkuName Standard_RAGRS `
+          -Location <location> `
+          -Kind StorageV2 `
+          -DnsEndpointType AzureDnsZone
+
+$account.PrimaryEndpoints
+$account.SecondaryEndpoints
+
+Remove the storage account
+
+Remove-AzStorageAccount -Name <storage-account> -ResourceGroupName <resource-group>

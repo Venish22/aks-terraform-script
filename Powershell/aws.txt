@@ -1,0 +1,35 @@
+Amazon 
+
+EC2 - elastic cloud computing - windows, linux, redhat, amazon 
+
+Elasticity
+Control
+Flexibility
+Integrated
+Reliable
+Secure
+Inexpensive
+Easy
+
+Instance family 
+
+General purpose
+Compute optimized
+Memory optimized
+Storage
+
+Aws lambda 
+-programming code -->  tigger 
+
+Amazon Elastic Container Service
+ - scheduling and orechestration
+ - maintance and scale ability
+
+Storage in AWS
+
+S3 - simple storage service
+S3 glacier - 
+EFS
+AWS storage Gateway
+EBS
+

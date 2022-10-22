@@ -1,0 +1,223 @@
+Virtual machine Availability set in portal
+
+1)create a availability set [fault and update domain]
+
+2)create a virutal machine in it [repeat it for required number of VMs]
+
+3)enable availabilty option to availabilty set  and select the instance we create in the availabilty set 
+
+---------------------------------
+
+Using powershell
+
+create a file in powershell for service 
+
+1) create the avilability set
+
+New-AzAvailabilitySet -ResourceGroupName "ResourceGroup11" -Name "AvailabilitySet03" -Location "West US"  
+
+$avset_detail = Get-AzAvailabilitySet -ResourceGroupName "RGname" -Name "AVSetname"
+
+$fault_domain = 2
+$update_domain = 5
+
+New-AzAvailabilitySet -ResourceGroupName "ResourceGroup11" -Name "AvailabilitySet03" -Location "West US"
+
+Remove the resource group
+
+Remove-AaAvailabilitySet -Name "AVsetname" -ResourceGroupName "Powershell-RG"
+
+------------------------------------
+
+Virtual Machine Scaleset
+  
+-----Infrastructure as a Service
+-----Set of Identical Virtual Machines
+-----Built-in Auto Scaling Features
+
+
+Load balancer configuration - receives the Public IP address and sent the  information to the backend and manage the required server
+
+Virtual Machine Scaleset using portal
+
+1) select Virtual Machine Scale Set
+
+2)-select the subscribiton 
+  -Name the  Resource group
+  -select the availabilty zone for 99.99% [Manditaory]
+  -Orchestration - unifrom [1000]
+                 - Flexible [600] - customized image 
+  
+3) Networking - Load balancing Settings
+
+4) scaling  - instance count
+		- scaling policy
+		     -Manual 
+                 -Custom
+		-Minimum Number of instances
+		-Maximum Number of instances
+  
+  Scale out - CPU threshold = 80
+            - Duration Minutes = 5 mins
+		- Number instances to be increased by 
+
+  Scale in  - CPU threshold = 40
+            - Duration Minutes = 2mins
+ 		- Number instances to be increased by 
+
+5) Management - Azure AD 
+
+6) Health - Enable application health monitoring
+   	    - Application health monitoring 
+	    - portocal HTTP 
+	    - Port number
+          - path 
+   Automatic repair policy
+	    - Enable automatic repair policy
+	    - Grace period (mins) - 
+
+7) Advanced - Spreading algorithm
+  	           -Max Spreading [created with zones]
+		     -Fixed Spreading [without zones]
+
+8) tags
+9) review and create
+
+-------------------------------------
+
+
+Virtual machine scale set using powershell
+
+$rgname =
+$vmscalesetname =
+$vnetname =
+$subnetname =
+$pip =
+$lbname =
+
+run it first and then run the command if we have variable
+
+new-AzVmss -ResourceGroupName $rgname -location [location name] -VMScaleSetName $vmscalesetname -VirtualNetworkName $vnetname -SubnetName $subnetname -PublicIpAddressName $pip -LoadbalancerName $lbname -UpdatePolicyMode Automatic
+
+
+-------
+ 
+microsoft
+
+New-AzResourceGroup -ResourceGroupName "myResourceGroup" -Location "EastUS"
+
+
+New-AzVmss `
+  -ResourceGroupName "myResourceGroup" `
+  -Location "EastUS" `
+  -VMScaleSetName "myScaleSet" `
+  -VirtualNetworkName "myVnet" `
+  -SubnetName "mySubnet" `
+  -PublicIpAddressName "myPublicIPAddress" `
+  -LoadBalancerName "myLoadBalancer" `
+  -UpgradePolicyMode "Automatic"
+
+-----------------deploy the Webapplication-----------------------
+
+# Define the script for your Custom Script Extension to run
+$publicSettings = @{
+    "fileUris" = (,"https://raw.githubusercontent.com/Azure-Samples/compute-automation-configurations/master/automate-iis.ps1");
+    "commandToExecute" = "powershell -ExecutionPolicy Unrestricted -File automate-iis.ps1"
+}
+
+# Get information about the scale set
+$vmss = Get-AzVmss `
+            -ResourceGroupName "myResourceGroup" `
+            -VMScaleSetName "myScaleSet"
+
+# Use Custom Script Extension to install IIS and configure basic website
+Add-AzVmssExtension -VirtualMachineScaleSet $vmss `
+    -Name "customScript" `
+    -Publisher "Microsoft.Compute" `
+    -Type "CustomScriptExtension" `
+    -TypeHandlerVersion 1.8 `
+    -Setting $publicSettings
+
+# Update the scale set and apply the Custom Script Extension to the VM instances
+Update-AzVmss `
+    -ResourceGroupName "myResourceGroup" `
+    -Name "myScaleSet" `
+    -VirtualMachineScaleSet $vmss
+
+------Allow the traffic to the application-----------------
+
+# Get information about the scale set
+$vmss = Get-AzVmss `
+            -ResourceGroupName "myResourceGroup" `
+            -VMScaleSetName "myScaleSet"
+
+#Create a rule to allow traffic over port 80
+$nsgFrontendRule = New-AzNetworkSecurityRuleConfig `
+  -Name myFrontendNSGRule `
+  -Protocol Tcp `
+  -Direction Inbound `
+  -Priority 200 `
+  -SourceAddressPrefix * `
+  -SourcePortRange * `
+  -DestinationAddressPrefix * `
+  -DestinationPortRange 80 `
+  -Access Allow
+
+#Create a network security group and associate it with the rule
+$nsgFrontend = New-AzNetworkSecurityGroup `
+  -ResourceGroupName  "myResourceGroup" `
+  -Location EastUS `
+  -Name myFrontendNSG `
+  -SecurityRules $nsgFrontendRule
+
+$vnet = Get-AzVirtualNetwork `
+  -ResourceGroupName  "myResourceGroup" `
+  -Name myVnet
+
+$frontendSubnet = $vnet.Subnets[0]
+
+$frontendSubnetConfig = Set-AzVirtualNetworkSubnetConfig `
+  -VirtualNetwork $vnet `
+  -Name mySubnet `
+  -AddressPrefix $frontendSubnet.AddressPrefix `
+  -NetworkSecurityGroup $nsgFrontend
+
+Set-AzVirtualNetwork -VirtualNetwork $vnet
+
+# Update the scale set and apply the Custom Script Extension to the VM instances
+Update-AzVmss `
+    -ResourceGroupName "myResourceGroup" `
+    -Name "myScaleSet" `
+    -VirtualMachineScaleSet $vmss
+
+---------Test your scale set----------
+
+Get-AzPublicIpAddress -ResourceGroupName "myResourceGroup" | Select IpAddress
+
+-------Clean Up Resource----------------
+
+Remove-AzResourceGroup -Name "myResourceGroup" -Force -AsJob
+
+
+------------------------------------------------------------------------
+
+Using Azure Powershell
+
+https://learn.microsoft.com/en-us/azure/virtual-machine-scale-sets/tutorial-create-and-manage-powershell
+
+--------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

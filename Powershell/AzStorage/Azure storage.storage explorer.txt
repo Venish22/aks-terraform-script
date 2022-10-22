@@ -1,0 +1,49 @@
+Azure Table Storage
+
+Add extra column and rows 
+Azure CosmosDB
+
+Table storage using powershell
+
+Install-Module AzTable
+
+Add-AzAccount
+
+Get-AzLocation | select Location
+$location = "eastus"
+
+$resourceGroup = "pshtablesrg"
+New-AzResourceGroup -ResourceGroupName $resourceGroup -Location $location
+
+$storageAccountName = "pshtablestorage"
+$storageAccount = New-AzStorageAccount -ResourceGroupName $resourceGroup `
+  -Name $storageAccountName `
+  -Location $location `
+  -SkuName Standard_LRS `
+  -Kind Storage
+
+$ctx = $storageAccount.Context
+
+https://learn.microsoft.com/en-us/azure/storage/tables/table-storage-how-to-use-powershell
+
+
+------------------------------------------------------------------------------
+
+Message Store (storage queues)
+
+Data will be shares as smaller junks
+
+ 					|----	[ ]
+[ ]-------------[ Q Q Q Q ]---|----	[ ]
+					|----	[ ]
+
+-------------------------------------------------
+
+Azure Storage Explorer
+
+install Azure Storage Explore
+
+copy the SAS 
+
+microsoft azure storage explorer  ---> connect ---> storage account --->  connection string 
+

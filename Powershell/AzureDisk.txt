@@ -1,0 +1,65 @@
+Storage service creation in portal
+
+Azure disk - extra disk as a part in VM,
+
+1)create a VM
+
+disks--> create and attach a new disk 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+storage service using powershell - Azure Disk
+
+-----------Using Managed disk
+
+$rgName = 'myResourceGroup'
+$vmName = 'myVM'
+$location = 'East US'
+$storageType = 'Premium_LRS'
+$dataDiskName = $vmName + '_datadisk1'
+
+$diskConfig = New-AzDiskConfig -SkuName $storageType -Location $location -CreateOption Empty -DiskSizeGB 128
+$dataDisk1 = New-AzDisk -DiskName $dataDiskName -Disk $diskConfig -ResourceGroupName $rgName
+
+$vm = Get-AzVM -Name $vmName -ResourceGroupName $rgName
+$vm = Add-AzVMDataDisk -VM $vm -Name $dataDiskName -CreateOption Attach -ManagedDiskId $dataDisk1.Id -Lun 1
+
+Update-AzVM -VM $vm -ResourceGroupName $rgName
+
+------------Using managed disks in an Availability Zone
+
+$rgName = 'myResourceGroup'
+$vmName = 'myVM'
+$location = 'East US 2'
+$storageType = 'Premium_LRS'
+$dataDiskName = $vmName + '_datadisk1'
+
+$diskConfig = New-AzDiskConfig -SkuName $storageType -Location $location -CreateOption Empty -DiskSizeGB 128 -Zone 1
+$dataDisk1 = New-AzDisk -DiskName $dataDiskName -Disk $diskConfig -ResourceGroupName $rgName
+
+$vm = Get-AzVM -Name $vmName -ResourceGroupName $rgName
+$vm = Add-AzVMDataDisk -VM $vm -Name $dataDiskName -CreateOption Attach -ManagedDiskId $dataDisk1.Id -Lun 1
+
+Update-AzVM -VM $vm -ResourceGroupName $rgName
+
+------------Initialize the disk
+
+$location = "location-name"
+    $scriptName = "script-name"
+    $fileName = "script-file-name"
+    Set-AzVMCustomScriptExtension -ResourceGroupName $rgName -Location $locName -VMName $vmName -Name $scriptName -TypeHandlerVersion "1.4" -StorageAccountName "mystore1" -StorageAccountKey "primary-key" -FileName $fileName -ContainerName "scripts"
+
+------------Attach an existing data disk to a VM
+
+$rgName = "myResourceGroup"
+$vmName = "myVM"
+$dataDiskName = "myDisk"
+$disk = Get-AzDisk -ResourceGroupName $rgName -DiskName $dataDiskName
+
+$vm = Get-AzVM -Name $vmName -ResourceGroupName $rgName
+
+$vm = Add-AzVMDataDisk -CreateOption Attach -Lun 0 -VM $vm -ManagedDiskId $disk.Id
+
+Update-AzVM -VM $vm -ResourceGroupName $rgName
+
+------------------------------------------------------------------------------------------------------------------------------------------------------

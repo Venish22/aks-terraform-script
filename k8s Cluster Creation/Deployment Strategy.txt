@@ -1,0 +1,59 @@
+What do you understand by deployment?
+
+Have you heard of the term failover?
+
+Have you heard of the term load balancer? What does it do?
+
+In production, the same site will be available across multiple servers, what happens when one server goes down
+
+To create a cluster > gcloud container clusters create my-first-cluster --zone us-central1-c --machine-type n1-standard-1
+This will create cluster named as my-first-cluster and will adopt the default configuration of 3 nodes
+
+Create yaml file locally
+Save yaml file
+Open editor by clicking on pencil icon
+Copy over  
+
+Deploy the yaml file > kubectl apply -f nginx-deployment.yaml
+
+Alternatively implicit command for creating a deployment
+To Create a deployment > kubectl create deployment <deployment name> --image <image name> --replicas=<number of replicas> | kubectl create deployment nginx-deployment-2 --image nginx --replicas=20
+
+List all the deployments > kubectl get deployment
+
+To list your deployment > kubectl get deploy <deployment name> | kubectl get deploy nginx-deployment
+
+To get Description of deployment > kubectl describe deployment <deployment name> | kubectl describe deployment nginx-deployment
+
+To Delete a deployment > kubectl delete deployment <deployment name> | kubectl delete deployment nginx-deployment
+
+To Get replicaset > kubectl get rs
+
+To see labels of the pods > kubectl get pods --show-labels
+
+To Update a deployment > kubectl set image deployment <deployment name> <container name>=<new image> | kubectl set image deployment nginx-deployment nginx=nginx:1.16.1
+
+To see the rollout status > kubectl rollout status deployment <deployment name> | kubectl rollout status deployment nginx-deployment
+
+To see Rollout history > kubectl rollout history deployment <deployment name> | kubectl rollout history deployment nginx-deployment
+
+To see Revision details> kubectl rollout history deployment <deployment name> --revision=<revision number> | kubectl rollout history deployment nginx-deployment --revision=2
+
+To Rollback to previous version > kubectl rollout undo deployment <deployment name> | kubectl rollout undo deployment nginx-deployment
+
+To Rollback to a specific revision > kubectl rollout undo deployment <deployment name> --to-revision=<revision number> | kubectl rollout undo deployment nginx-deployment --to-revision=2
+
+To Scale a deployment > kubectl scale deployment <deployment name> --replicas=<new number of replicas> | kubectl scale deployment nginx-deployment --replicas=10
+
+To Pause a deployment > kubectl rollout pause deployment <deployment name> | kubectl rollout pause deployment nginx-deployment
+
+To Resume a deployment > kubectl rollout resume deployment <deployment name> | kubectl rollout resume deployment nginx-deployment
+
+Deployment Strategy:
+Two types of strategies: Rolling update and Recreate
+Default Strategy: Rolling Update
+When to use Recreate strategy:
+1. Your application can withstand a short amount downtime 
+2. When your application does not support having new and old versions of your application code running at the same time.
+
+Update the yaml file with strategy type and run

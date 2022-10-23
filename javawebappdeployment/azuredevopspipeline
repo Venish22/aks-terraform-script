@@ -1,0 +1,29 @@
+Create Azure Build YAML pipeline in Azure DevOps
+
+Login to Azure DevOps, go to your project dashboard.
+
+Click on Pipelines --> new pipeline
+
+Select GitHub or where ever your source code is 
+
+Select your code repo
+
+Choose the below option --> Maven package Java project web app to Linux on Azure
+
+Choose the azure subscription, click on continue
+
+Enter your Microsoft account details for Azure pipelines to authenticate with Azure cloud for deploying WebApp into App service.
+
+Now choose web app name from the drop down
+
+Click on validate and configure
+
+Now Review Azure pipeline code 
+and make sure path of mom.xml is added properly as MyWebApp/pom.xml
+
+Click on Save and Run
+
+Once you save the file, you can confirm by logging into your GitHub repo.
+
+Now Build must be running. Once build is successful, we need to give permission for deployment into Azure. Click on Review
+

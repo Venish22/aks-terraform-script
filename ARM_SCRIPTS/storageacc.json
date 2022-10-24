@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+
+        "OrgName": {
+            "type": "string",
+            "defaultValue": "MyOrg1"
+          
+        }
+    },
+    "functions": [],
+    "variables": {
+
+        "accountname":"[concat(parameters('OrgName'), uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+
+        {
+            "name": "[variables('accountname')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-04-01",
+            "tags": {
+                "displayName": "Demo Account"
+            },
+            "location": "[resourceGroup().location]",
+            "kind": "StorageV2",
+            "sku": {
+                "name": "Premium_LRS",
+                "tier": "Premium"
+            }
+        },
+
+{
+     "name": "[concat(variables('accountname'),'/default/myblob')]",
+     "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+     "apiVersion": "2021-04-01",
+     "dependsOn": [
+         "[resourceId('Microsoft.Storage/storageAccounts',variables('accountname'))]"
+     ],
+     "properties": {
+         "publicAccess": "None"
+     }
+ }
+
+    ],
+    "outputs": {
+        "StorageAccName": {
+            "type": "string",
+            "value":"[variables('accountname')]"
+        }
+    }
+}
